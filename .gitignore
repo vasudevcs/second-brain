@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.db
+*.sqlite
+*.sqlite3
+
+.venv/
+venv/
+
+.env
+
+.obsidian/workspace.json
+
+data/chroma/
+
+node_modules/
