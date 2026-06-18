@@ -2,9 +2,14 @@ import sqlite3
 from pathlib import Path
 
 # Ensure data directory exists
-Path("data").mkdir(exist_ok=True)
+from pathlib import Path
 
-db_path = "data/brain.db"
+ROOT = Path(__file__).resolve().parent.parent
+
+DATA_DIR = ROOT / "data"
+DATA_DIR.mkdir(exist_ok=True)
+
+db_path = DATA_DIR / "brain.db"
 
 conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
