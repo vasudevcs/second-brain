@@ -1,3 +1,12 @@
+---
+type: lesson
+date: 2026-06-18
+project: second-brain
+concept: git
+tags:
+  - git
+  - github
+---
 # Lesson
 
 Date: 2026-06-18

@@ -1,3 +1,13 @@
+---
+type: session
+date: 2026-06-18
+project: second-brain
+duration_mins: 120
+mood: productive
+tags:
+  - setup
+  - planning
+---
 # Session
 
 Date: 2026-06-18

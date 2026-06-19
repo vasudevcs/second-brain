@@ -1,14 +1,21 @@
+---
+type: decision
+date:
+project:
+status: proposed
+tags: []
+---
+
 # Decision
 
-Date:
-Project:
+## Context
 
-Decision:
+## Options Considered
 
-Alternatives Considered:
+## Chosen Option
 
-Reason:
+## Rationale
 
-Expected Outcome:
+## Expected Outcome
 
-Actual Outcome:
+## Actual Outcome

@@ -1,3 +1,12 @@
+---
+type: decision
+date: 2026-06-18
+project: second-brain
+status: accepted
+tags:
+  - architecture
+  - obsidian
+---
 # Decision
 
 Date: 2026-06-18

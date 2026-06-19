@@ -1,14 +1,21 @@
+---
+type: mistake
+date:
+project:
+category:
+severity:
+recurrence: 0
+tags: []
+---
+
 # Mistake
 
-Date:
-Project:
+## What Happened
 
-Problem:
+## Root Cause
 
-Root Cause:
+## Fix Applied
 
-Fix:
+## Lesson Learned
 
-Lesson Learned:
-
-Tags:
+## Time Lost (minutes)

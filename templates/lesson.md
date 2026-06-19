@@ -1,12 +1,15 @@
+---
+type: lesson
+date:
+project:
+concept:
+tags: []
+---
+
 # Lesson
 
-Date:
-Project:
+## What I Learned
 
-Concept:
+## Example
 
-What I Learned:
-
-Example:
-
-Future Use:
+## Future Use
