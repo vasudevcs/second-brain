@@ -1,9 +1,6 @@
 import sqlite3
 from pathlib import Path
 
-# Ensure data directory exists
-from pathlib import Path
-
 ROOT = Path(__file__).resolve().parent.parent
 
 DATA_DIR = ROOT / "data"
@@ -30,7 +27,11 @@ CREATE TABLE IF NOT EXISTS sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     date TEXT,
     project TEXT,
-    summary TEXT
+    summary TEXT,
+    blockers TEXT,
+    next_steps TEXT,
+    duration_mins INTEGER,
+    mood TEXT
 )
 """)
 
@@ -38,11 +39,16 @@ CREATE TABLE IF NOT EXISTS sessions (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS mistakes (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
+    date TEXT,
     project TEXT,
+    title TEXT,
+    category TEXT,
+    severity TEXT,
     root_cause TEXT,
+    fix TEXT,
     lesson TEXT,
-    date TEXT
+    time_lost_mins INTEGER,
+    recurrence INTEGER DEFAULT 0
 )
 """)
 
@@ -50,10 +56,12 @@ CREATE TABLE IF NOT EXISTS mistakes (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS decisions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
+    date TEXT,
     project TEXT,
+    title TEXT,
     reason TEXT,
-    date TEXT
+    outcome TEXT,
+    status TEXT
 )
 """)
 
@@ -61,10 +69,10 @@ CREATE TABLE IF NOT EXISTS decisions (
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS lessons (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT,
+    date TEXT,
     project TEXT,
-    content TEXT,
-    date TEXT
+    concept TEXT,
+    content TEXT
 )
 """)
 
