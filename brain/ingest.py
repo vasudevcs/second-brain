@@ -42,53 +42,50 @@ def normalize_date(raw) -> str | None:
 
     Accepts a datetime/date object (python-frontmatter may return one)
     or any string format listed in _DATE_FORMATS.
-    Returns None when the value is absent or cannot be parsed so the
-    database stores NULL rather than a corrupt string.
+    Returns None when absent or unparseable so the DB stores NULL
+    rather than a corrupt string.
     """
     if raw is None:
         return None
-
-    # python-frontmatter may have already parsed a date or datetime object
     if hasattr(raw, "strftime"):
         return raw.strftime("%Y-%m-%d")
-
     text = str(raw).strip()
     if not text:
         return None
-
     for fmt in _DATE_FORMATS:
         try:
             return datetime.strptime(text, fmt).strftime("%Y-%m-%d")
         except ValueError:
             continue
-
     print(f"  [warn] unrecognised date format: {text!r} — stored as NULL")
     return None
 
 
-# ── Tag serialisation ─────────────────────────────────────────────────────────
+# ── List-field serialisation ──────────────────────────────────────────────────
 
-def serialize_tags(raw) -> str:
+def serialize_list(raw) -> str:
     """
-    Return a JSON array string regardless of how the tags field was written.
+    Serialise any frontmatter value that should be stored as a JSON array.
+
+    Used for: tags, warning_signs, prevention_checklist.
 
     Handles:
-      tags: [git, github]           → '["git", "github"]'
-      tags:\n  - git\n  - github    → '["git", "github"]'
-      tags: "single-tag"            → '["single-tag"]'
-      tags: null / missing          → '[]'
+      field: [a, b, c]            → '["a", "b", "c"]'
+      field:\n  - a\n  - b        → '["a", "b"]'
+      field: "single value"       → '["single value"]'
+      field: null / missing       → '[]'
     """
     if raw is None:
         return "[]"
     if isinstance(raw, list):
-        return json.dumps([str(t).strip() for t in raw if str(t).strip()])
+        return json.dumps([str(item).strip() for item in raw if str(item).strip()])
     if isinstance(raw, str):
         stripped = raw.strip()
         return json.dumps([stripped]) if stripped else "[]"
     return "[]"
 
 
-# ── Database helpers ──────────────────────────────────────────────────────────
+# ── Database connection ───────────────────────────────────────────────────────
 
 def get_connection():
     if not DB_PATH.exists():
@@ -102,9 +99,6 @@ def get_connection():
 
 
 # ── Per-type ingest functions ─────────────────────────────────────────────────
-# Each function accepts a cursor, scans its subfolder, and returns the
-# number of *new* records inserted.  Already-seen files (matched by
-# source_file UNIQUE constraint) are silently skipped via INSERT OR IGNORE.
 
 def ingest_sessions(cursor) -> int:
     folder = VAULT_PATH / "sessions"
@@ -129,7 +123,7 @@ def ingest_sessions(cursor) -> int:
             post.get("next_steps"),
             post.get("duration_mins"),
             post.get("mood"),
-            serialize_tags(post.get("tags")),
+            serialize_list(post.get("tags")),
             source,
         ))
 
@@ -155,9 +149,11 @@ def ingest_mistakes(cursor) -> int:
         cursor.execute("""
             INSERT OR IGNORE INTO mistakes
                 (date, project, title, category, severity,
-                 root_cause, fix, lesson, time_lost_mins,
-                 recurrence, tags, source_file)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 root_cause, fix, lesson, time_lost_mins, recurrence,
+                 tags, source_file,
+                 engineering_pattern, beginner_explanation,
+                 real_world_analogy, warning_signs, prevention_checklist)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             normalize_date(post.get("date")),
             post.get("project"),
@@ -169,8 +165,14 @@ def ingest_mistakes(cursor) -> int:
             post.get("lesson"),
             post.get("time_lost_mins"),
             post.get("recurrence", 0),
-            serialize_tags(post.get("tags")),
+            serialize_list(post.get("tags")),
             source,
+            # Beginner Coach Mode fields
+            post.get("engineering_pattern"),
+            post.get("beginner_explanation"),
+            post.get("real_world_analogy"),
+            serialize_list(post.get("warning_signs")),
+            serialize_list(post.get("prevention_checklist")),
         ))
 
         if cursor.rowcount:
@@ -204,7 +206,7 @@ def ingest_decisions(cursor) -> int:
             post.get("reason"),
             post.get("outcome"),
             post.get("status"),
-            serialize_tags(post.get("tags")),
+            serialize_list(post.get("tags")),
             source,
         ))
 
@@ -236,7 +238,7 @@ def ingest_lessons(cursor) -> int:
             post.get("project"),
             post.get("concept"),
             post.content.strip() or None,
-            serialize_tags(post.get("tags")),
+            serialize_list(post.get("tags")),
             source,
         ))
 
