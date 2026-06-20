@@ -2,31 +2,30 @@
 type: decision
 date: 2026-06-18
 project: second-brain
+title: Use Obsidian as the primary capture interface
 status: accepted
+reason: Already in daily use. Markdown files are portable and version-controllable. Avoids building a custom frontend before the intelligence layer exists.
+outcome:
 tags:
   - architecture
   - obsidian
 ---
-# Decision
 
-Date: 2026-06-18
+## Context
+Needed a note-writing interface for daily engineering capture. Options were a
+custom web dashboard, a CLI-only system, or Obsidian.
 
-Project: Second Brain
+## Options Considered
+- Custom web dashboard — maximum control, high build cost, distraction from core goal
+- CLI-only system — fast to build, poor for long-form writing
+- Obsidian — already in use, markdown portable, graph view included
 
-Decision:
-Use Obsidian as the primary interface.
+## Chosen Option
+Obsidian
 
-Alternatives Considered:
-- Custom web dashboard
-- CLI-only system
+## Rationale
+Building a frontend would consume time better spent on the intelligence layer.
+Obsidian's YAML frontmatter support aligns directly with the ingestion pipeline.
+Markdown files are plain text — no vendor lock-in, survives any future tool change.
 
-Reason:
-Already using Obsidian.
-Markdown files are portable.
-Allows focusing on intelligence rather than frontend development.
-
-Expected Outcome:
-Faster development and easier note capture.
-
-Status:
-Accepted
+## Actual Outcome

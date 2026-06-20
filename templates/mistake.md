@@ -2,13 +2,13 @@
 type: mistake
 date:
 project:
+title:
 category:
 severity:
+time_lost_mins:
 recurrence: 0
 tags: []
 ---
-
-# Mistake
 
 ## What Happened
 
@@ -17,5 +17,3 @@ tags: []
 ## Fix Applied
 
 ## Lesson Learned
-
-## Time Lost (minutes)
